@@ -15,10 +15,10 @@
         <a href="/roll-dice/6">6</a>
     </div>
 <!--    if the dice roll is not zero-->
-<!--    <div th:if="${rolled != null}">-->
-        <h1> Your random number is: <span th:text="diceRoll"></span></h1>
-        <h1> your number was: <span th:text="guess"></span></h1>
-<!--        <h1>You guess: <span th:if="${diceRoll != guess}">in</span>correct</h1>-->
+    <div th:if="${rolled != null}">
+        <h1> Your random number is: <span th:text="${diceRoll}"></span></h1>
+        <h1> your number was: <span th:text="${guess}"></span></h1>
+        <h1>You guessed: <span th:if="${diceRoll != guess}">in</span>correct</h1>
 
     </div>
 </body>

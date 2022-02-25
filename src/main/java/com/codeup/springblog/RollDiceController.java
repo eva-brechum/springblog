@@ -15,11 +15,10 @@ public class RollDiceController {
     }
     @GetMapping("/roll-dice/{n}")
     public void rollDice(@PathVariable int n, Model model) {
-        Random rn = new Random();
-        int diceRoll = rn.nextInt(6 -1 + 1);
-//        1 + (int) (Math.random() * ((7 - 1) + 1))
-        model.addAttribute("guess", n);
-        model.addAttribute("rolled", diceRoll);
-//        return "roll-dice";
+//
+        int random = (int)(Math.random() * (6 -1) + 1);
+        model.addAttribute("you guessed", "guess" + n);
+        model.addAttribute("Dice you rolled", "rolled" + random);
+//        return "rollDice";
     }
 }
