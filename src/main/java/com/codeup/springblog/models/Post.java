@@ -1,9 +1,29 @@
 package com.codeup.springblog.models;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name= "posts")
 public class Post {
+    @Id
+    @ManyToOne(optional = false)
+    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Column(nullable = false, length = 200)
     private String title;
+
+    @Column(nullable = false)
     private String body;
+
+    public void setId(GenerateValue id) {
+        this.id = id;
+    }
+
+    public GenerateValue getId() {
+        return id;
+    }
 
     public Post() {};
 
@@ -11,14 +31,6 @@ public class Post {
         this.id = id;
         this.title = title;
         this.body = body;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getTitle() {
