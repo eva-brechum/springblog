@@ -1,14 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
 
     <meta charset="UTF-8">
     <title>Information on Posts </title>
-    <th: include= "partials/scripts">
+    <th: include= "partials/bootstrap :: styling">
 </th:>
 </head>
 <body>
+    <div class="card" th:each=>
+        <div class="card-body">
+            <h2 class="card-title" th:text="${individualPost.getTitle()}">Card title</h2>
+            <p class="card-text" th:text="${individualPost.getBody()}">Lorem ipsum for card title</p>
+        </div>
+    </div>
+<th:replace replace= "partials/bootstrap :: scripts">
 
-
+    </th:replace>
+</th>
 </body>
 </html>

@@ -3,8 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <th:block th:include= "partials/bootstrap :: styling">
+    </th:block>
 </head>
 <body>
+<div class="card">
+    <div class="card-body" th:each="post :${allThePosts}">
+        <h2 class="card-title" th:text="${post.getTitle()}">Card title</h2>
+        <p class="card-text" th:text="${post.getBody()}">Lorem ipsum for card title</p>
+    </div>
+</div>
+<th:block th:replace= "partials/bootstrap :: scripts">
+
+</th:block>
 
 </body>
 </html>
