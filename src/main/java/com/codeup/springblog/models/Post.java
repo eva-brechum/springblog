@@ -6,7 +6,7 @@ import javax.persistence.*;
 @Table(name= "posts")
 public class Post {
     @Id
-    @ManyToOne(optional = false)
+//    @ManyToOne(optional = false)
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -17,11 +17,11 @@ public class Post {
     @Column(nullable = false)
     private String body;
 
-    public void setId(GenerateValue id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public GenerateValue getId() {
+    public long getId() {
         return id;
     }
 
