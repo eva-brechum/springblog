@@ -3,16 +3,14 @@ package com.codeup.springblog.controllers;
 import com.codeup.springblog.models.Post;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class PostController {
+
     //posts index page
     @GetMapping("/posts")
     public String posts(Model model){
@@ -49,7 +47,9 @@ public class PostController {
     //create a new post
     @PostMapping("/posts/create")
     @ResponseBody
-    public String createPost() {
+    public String createPost(@RequestParam(name = "title") String title, @RequestParam(name = "body") String body) {
+//      Post newPost = new Post(title, ;
+//      postsDao.save(newPost);
         return "create a new page";
     }
 }
