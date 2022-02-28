@@ -7,6 +7,7 @@ import javax.persistence.*;
 public class Post {
     @Id
 //    @ManyToOne(optional = false)
+
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -16,6 +17,10 @@ public class Post {
 
     @Column(nullable = false)
     private String body;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public void setId(long id) {
         this.id = id;
@@ -27,10 +32,11 @@ public class Post {
 
     public Post() {};
 
-//    String Post(String title, String body) {
-//        this.title = title;
-//        this.body = body;
-//    }
+    String Post(String title, String body, User user) {
+        this.title = title;
+        this.body = body;
+        this.user = user;
+    }
 
     public Post(long id, String title, String body) {
         this.id = id;
@@ -52,6 +58,14 @@ public class Post {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public User getUser() {
+        return this.user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
 
