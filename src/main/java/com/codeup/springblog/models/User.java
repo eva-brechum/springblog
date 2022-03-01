@@ -1,6 +1,7 @@
 package com.codeup.springblog.models;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -10,16 +11,27 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, length = 255, unique = true)
     private String username;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, length = 255, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     private String password;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy ="user")
+    private List<Post> posts;
+
     public User() {
+    }
+
+    public User(long id, String username, String email, String password, List<Post> posts) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.posts = posts;
     }
 
     public long getId() {
@@ -54,4 +66,13 @@ public class User {
         this.password = password;
     }
 
-}
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+
+    }
+
