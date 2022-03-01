@@ -54,6 +54,7 @@ public class PostController {
         return "post/create";
     }
 
+
     //create a new post
     @PostMapping("/posts/create")
     @ResponseBody
@@ -84,4 +85,5 @@ public class PostController {
         postsDao.deleteById(id);
         return "redirect:/posts";
     }
+
 }

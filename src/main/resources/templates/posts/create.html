@@ -1,10 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Create </title>
+    <title>Edit Post </title>
+    <th:block th:include="partials/bootstrap :: styling"></th:block>
 </head>
-<body>
-
+<body class = "container">
+<h1> Create A Post</h1>
+<form th:action ="@{|/posts/create|}" th:method ="POST" th:object ="{post}">
+    <label for="title" >Title</label>
+    <input id="title" type ="text" name="title" th:field="*{title}" placeholder="Enter title">
+    <label for="body">Body</label>
+    <textarea id ="body" name="body" th:field=""*{body}"></textarea>
+    <button>Update Post</button>
+</form>
+<th:block th:replace="partials/bootstrap :: scripts"></th:block>
 </body>
 </html>
