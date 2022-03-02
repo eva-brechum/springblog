@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Edit and Post</title>
@@ -7,13 +7,14 @@
 </head>
 <body class = "container">
 <h1> Create A Post</h1>
-<form th:action ="@{/posts/{id}/edit (id = ${postToEdit.getId()})}" th:method ="POST">
+<form th:action ="@{/posts/{id}/edit (id = ${postEdit.getId()})}" th:method ="POST" th:object = "${postEdit}">
     <label for="title" >Title</label>
-    <input id="title" type ="text" name="title" th:field="${postToEdit.getTitle()}" placeholder="Enter title">
+    <input id="title" type ="text" name="title" th:field="*{title}">
 
     <label for="body">Body</label>
-    <textarea id ="body" name="body" th:field="${postToEdit.getBody()}"></textarea>
-    <button>Update Post</button>
+    <textarea id ="body" name="body" th:field="*{body}"></textarea>
+    <input type="hidden" th:field="*{user}" id="user">
+    <button type="submit">Update Post</button>
 </form>
 <th:block th:replace="partials/bootstrap :: scripts"></th:block>
 </body>

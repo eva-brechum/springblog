@@ -7,12 +7,13 @@
 </head>
 <body class = "container">
 <h1> Create A Post</h1>
-<form th:action ="@{|/posts/create|}" th:method ="POST">
+<form th:action ="@{/posts/create}" th:method ="POST" th:object = "${newPost}">
     <label for="title" >Title</label>
-    <input id="title" type ="text" name="title">
+    <input id="title" type ="text" name="title" th:field="*{title}">
     <label for="body">Body</label>
-    <textarea id ="body" name="body"></textarea>
-    <button>Update Post</button>
+    <textarea id ="body" name="body" th:field="*{body}"></textarea>
+    <input type="hidden" th:field="*{user}" id="user">
+    <button type="submit">Update Post</button>
 </form>
 <th:block th:replace="partials/bootstrap :: scripts"></th:block>
 </body>

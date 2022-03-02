@@ -16,27 +16,21 @@ import java.util.List;
 public class PostController {
     private PostRepository postsDao;
     private UserRepository usersDao;
-
-    @Autowired
     private final EmailService emailService;
-
 
     public PostController(PostRepository postsDao, UserRepository usersDao, EmailService emailService) {
         this.postsDao = postsDao;
         this.usersDao = usersDao;
         this.emailService = emailService;
-
     }
-
 
 
     //posts index page
     @GetMapping("/posts")
-    public String posts(Model model){
-        List<Post> allThePosts = new ArrayList<>();
-        Post p2 = new Post(2, "Default", "to test if it works");
-        allThePosts.add(p2);
-
+    public String posts(Model model) {
+//        List<Post> allThePosts = new ArrayList<>();
+//        Post p2 = new Post(2, "Default", "to test if it works");
+//        allThePosts.add(p2);
 //        model.addAttribute("allThePosts" , allThePosts);
         model.addAttribute("allThePosts", postsDao.findAll());
         return "posts/index";
@@ -49,43 +43,45 @@ public class PostController {
     //view an individual post
     @GetMapping("/posts/{id}")
     public String getPost(@PathVariable long id, Model model) {
-        model.addAttribute("individualPost" , postsDao.getById(id));
-
+        model.addAttribute("individualPost", postsDao.getById(id));
         return "posts/show";
     }
-//    @ResponseBody
+
+    //    @ResponseBody
 //    public String getPost(@PathVariable long id) {
 //        return "view an individual post";
 //    }
     //view the form for creating a post
     @GetMapping("/posts/create")
-    @ResponseBody
-    public String viewCreateForm() {
-        return "post/create";
+    public String viewCreateForm(Model model) {
+        model.addAttribute("newPost", new Post());
+        return "posts/create";
     }
 
 
     //create a new post
     @PostMapping("/posts/create")
-    @ResponseBody
-    public String createPost(@RequestParam(name = "title") String title, @RequestParam(name = "body") String body) {
-      Post newPost = new Post(title, body);
-      newPost.setUser(usersDao.getById(1L));
-      postsDao.save(newPost);
+    public String createPost(@ModelAttribute Post newPost) {
+//      Post newPost = new Post(title, body);
+        newPost.setUser(usersDao.getById(1L));
+        emailService.prepareAndSend(newPost, "created post", "it worked");
+        postsDao.save(newPost);
+
         return "redirect:/posts";
     }
+
     @GetMapping("posts/{id}/edit")
     public String showEdit(@PathVariable long id, Model model) {
         Post postEdit = postsDao.getById(id);
-        model.addAttribute("postToEdit", postEdit);
+        model.addAttribute("postEdit", postEdit);
         return "posts/edit";
     }
 
     @PostMapping("/posts/{id}/edit")
-    public String submitEdit(@RequestParam(name = "title") String title, @RequestParam(name= "body") String body, @PathVariable long id) {
-        Post postEdit = postsDao.getById(id);
-        postEdit.setTitle(title);
-        postEdit.setBody(body);
+    public String submitEdit(@ModelAttribute Post postEdit, @PathVariable long id) {
+//        Post postEdit = postsDao.getById(id);
+//        postEdit.setTitle(title);
+//        postEdit.setBody(body);
         postsDao.save(postEdit);
         return "redirect:/posts";
     }
@@ -95,13 +91,7 @@ public class PostController {
         postsDao.deleteById(id);
         return "redirect:/posts";
     }
-
-    @GetMapping("/send-email")
-    public String sendEmail() {
-        String emailSubject = "Testing email subject";
-        String emailBody = "Body of email test";
-        emailService.prepareAndSend();
-        return "redirect:/";
-    }
-
 }
+
+
+
