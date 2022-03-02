@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <title>Edit and Post</title>
     <th:block th:include="partials/bootstrap :: styling"></th:block>
-    <th:block th:include="partials/bootstrap :: styling"></th:block>
 </head>
 <body class = "container">
 <h1> Create A Post</h1>
-<form th:action ="@{|/posts/create|}" th:method ="POST" th:object ="{post}">
+<form th:action ="@{/posts/{id}/edit (id = ${postToEdit.getId()})}" th:method ="POST">
     <label for="title" >Title</label>
-    <input id="title" type ="text" name="title" th:field="*{title}" placeholder="Enter title">
+    <input id="title" type ="text" name="title" th:field="${postToEdit.getTitle()}" placeholder="Enter title">
+
     <label for="body">Body</label>
-    <textarea id ="body" name="body" th:field="*{body}"></textarea>
+    <textarea id ="body" name="body" th:field="${postToEdit.getBody()}"></textarea>
     <button>Update Post</button>
 </form>
 <th:block th:replace="partials/bootstrap :: scripts"></th:block>

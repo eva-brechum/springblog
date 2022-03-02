@@ -15,7 +15,7 @@ public class PostController {
     private PostRepository postsDao;
     private UserRepository usersDao;
 
-    public void setUsersDao(PostRepository postsDao, UserRepository usersDao) {
+    public PostController(PostRepository postsDao, UserRepository usersDao) {
         this.postsDao = postsDao;
         this.usersDao = usersDao;
     }

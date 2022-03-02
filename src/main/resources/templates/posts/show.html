@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 
     <meta charset="UTF-8">
     <title>Information on Posts </title>
-    <th: include= "partials/bootstrap :: styling">
-</th:>
+    <th:block th:include= "partials/bootstrap :: styling">
+</th:block>
 </head>
 <body>
     <div class="card" th:each=>
@@ -13,10 +13,10 @@
             <h2 class="card-title" th:text="${individualPost.getTitle()}">Card title</h2>
             <p class="card-text" th:text="${individualPost.getBody()}">Lorem ipsum for card title</p>
         </div>
+        <h2> Email user @: <span th:text="${individualPost.getUser().getEmail()}"></span></h2>
     </div>
-<th:replace replace= "partials/bootstrap :: scripts">
-
-    </th:replace>
+<th:block th:replace= "partials/bootstrap :: scripts">
+    </th:block>
 </th>
 </body>
 </html>
