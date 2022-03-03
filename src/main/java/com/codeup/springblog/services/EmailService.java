@@ -31,5 +31,19 @@ public class EmailService {
             System.err.println(ex.getMessage());
         }
     }
+    public void prepareAndSend(String subject, String body) {
+        SimpleMailMessage msg = new SimpleMailMessage();
+        msg.setFrom(from);
+        msg.setTo("springuser@email.com");
+        msg.setSubject(subject);
+        msg.setText(body);
+
+        try{
+            this.emailSender.send(msg);
+        }
+        catch (MailException ex) {
+            System.err.println(ex.getMessage());
+        }
+    }
 
 }
