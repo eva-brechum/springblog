@@ -1,4 +1,4 @@
- <nav th:fragment="navbar" class="navbar navbar-dark bg-dark">
+ <nav th:fragment="navbar" class="navbar navbar-light bg-light">
                 <a class="navbar-brand" href="#">Navbar</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -11,11 +11,22 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#">Link</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Posts</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" href="#" id="navbarDropdown" role="button">Dropdown</a>
+                            <div class="dropdown-menu" aria-label="navbarDropdown">
+                                <a class=""dropdown-item href="#">Action</a>
+                            </div>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link disabled">Disabled</a>
+                        <li class="nav-item" sec:authorize="!isAuthenticated()">
+                            <form th:action="@{/logout}" th:method="post">
+                                <button class="btn-link btn" style="margin-top: 8px">Logout</button>
+                            </form>
+                        </li>
+                        <li class="nav-item" sec:authorize="!isAuthenticated()">
+                            <a class="nav-link" href="/login">Login</a>
+                        </li>
+                        <li class="nav-item nav-link" sec:authorize="isAuthenticated()">
+                            Hello, <span th:text="${#authentication.principal.username}"></span>
                         </li>
                     </ul>
                     <form class="d-flex">
