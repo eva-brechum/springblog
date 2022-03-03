@@ -1,10 +1,12 @@
 package com.codeup.springblog.controllers;
 
 import com.codeup.springblog.models.Post;
+import com.codeup.springblog.models.User;
 import com.codeup.springblog.repositories.PostRepository;
 import com.codeup.springblog.repositories.UserRepository;
 import com.codeup.springblog.services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -63,7 +65,8 @@ public class PostController {
     @PostMapping("/posts/create")
     public String createPost(@ModelAttribute Post newPost) {
 //      Post newPost = new Post(title, body);
-        newPost.setUser(usersDao.getById(1L));
+        newPost.setUser((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+//        newPost.setUser(usersDao.getById(1L));
         emailService.prepareAndSend(newPost, "created post", "it worked");
         postsDao.save(newPost);
 
@@ -73,16 +76,24 @@ public class PostController {
     @GetMapping("posts/{id}/edit")
     public String showEdit(@PathVariable long id, Model model) {
         Post postEdit = postsDao.getById(id);
+        User loggedInUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (postEdit.getUser().getId() == loggedInUser.getId()) {
         model.addAttribute("postEdit", postEdit);
-        return "posts/edit";
+            return "posts/edit";
+        }else {
+            return "redirect:/posts";
+        }
     }
 
     @PostMapping("/posts/{id}/edit")
     public String submitEdit(@ModelAttribute Post postEdit, @PathVariable long id) {
+        if(postsDao.getById(id).getUser().getId() == ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId()) {
+            postEdit.setUser((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+            postsDao.save(postEdit);
+        }
 //        Post postEdit = postsDao.getById(id);
 //        postEdit.setTitle(title);
 //        postEdit.setBody(body);
-        postsDao.save(postEdit);
         return "redirect:/posts";
     }
 
