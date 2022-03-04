@@ -124,10 +124,10 @@ public class PostIntegrationTests {
         Post existingPost = postsDao.findAll().get(0);
 
         // Makes a Get request to /ads/{id} and expect a redirection to the Ad show page
-        this.mvc.perform(post("/posts/" + existingPost.getId()))
+        this.mvc.perform((RequestBuilder) post("/posts/" + existingPost.getId()))
                 .andExpect(status().isOk())
                 // Test the dynamic content of the page
-                .andExpect(content().string(containsString(existingPost.getTitle())));
+                .andExpect((ResultMatcher) content().string(containsString(existingPost.getTitle())));
     }
 
 //    private ContentRequestMatchers content() {
