@@ -14,22 +14,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.client.match.ContentRequestMatchers;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.ResultMatcher;
 
 import javax.servlet.http.HttpSession;
 
-import java.time.MonthDay;
-
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.http.RequestEntity.post;
+import static org.junit.Assert.assertNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SpringblogApplication.class)
@@ -66,7 +59,8 @@ public class PostIntegrationTests {
         }
 
         // Throws a Post request to /login and expect a redirection to the posts index page after being logged in
-        httpSession = this.mvc.perform(post("/login").with(csrf())
+        httpSession = this.mvc.perform(
+                post("/login").with(csrf())
                         .param("username", "testUser")
                         .param("password", "pass"))
                 .andExpect(status().is(HttpStatus.FOUND.value()))
@@ -76,17 +70,6 @@ public class PostIntegrationTests {
                 .getSession();
     }
 
-//    private MonthDay post(String s) {
-//    }
-
-//    private ResultMatcher redirectedUrl(String s) {
-//    }
-
-//    private Object csrf() {
-//    }
-//
-//    private ResultMatcher redirectedUrl(String s) {
-//    }
 
     @Test
     public void contextLoads() {
@@ -94,8 +77,6 @@ public class PostIntegrationTests {
         assertNotNull(mvc);
     }
 
-//    private void assertNotNull(MockMvc mvc) {
-//    }
 
     @Test
     public void testIfUserSessionIsActive() throws Exception{
@@ -110,7 +91,7 @@ public class PostIntegrationTests {
                         .session((MockHttpSession) httpSession)
                         // Add all the required parameters to your request like this
                         .param("title", "test")
-                        .param("description", "for sale"))
+                        .param("body", "for sale"))
                 .andExpect(status().is3xxRedirection());
     }
 
@@ -123,24 +104,19 @@ public class PostIntegrationTests {
 
         Post existingPost = postsDao.findAll().get(0);
 
-        // Makes a Get request to /ads/{id} and expect a redirection to the Ad show page
-        this.mvc.perform((RequestBuilder) post("/posts/" + existingPost.getId()))
+        // Makes a Get request to /posts/{id} and expect a redirection to the Ad show page
+        this.mvc.perform(get("/posts/" + existingPost.getId()))
                 .andExpect(status().isOk())
                 // Test the dynamic content of the page
-                .andExpect((ResultMatcher) content().string(containsString(existingPost.getTitle())));
+                .andExpect(content().string(containsString(existingPost.getTitle())));
     }
 
-//    private ContentRequestMatchers content() {
-//    }
-
-//    private RequestBuilder get(String s) {
-//    }
 
     @Test
     public void testPostsIndex() throws Exception {
         Post existingPost = postsDao.findAll().get(0);
 
-        // Makes a Get request to /posts and verifies that we get some of the static text of the ads/index.html template and at least the title from the first Ad is present in the template.
+        // Makes a Get request to /posts and verifies that we get some of the static text of the posts/index.html template and at least the title from the first Ad is present in the template.
         this.mvc.perform(get("/posts"))
                 .andExpect(status().isOk())
                 // Test the static content of the page
@@ -152,7 +128,7 @@ public class PostIntegrationTests {
     @Test
     public void testEditPost() throws Exception {
         // Gets the first Ad for tests purposes
-        Post existingPost = PostsDao.findAll().get(0);
+        Post existingPost = postsDao.findAll().get(0);
 
         // Makes a Post request to /ads/{id}/edit and expect a redirection to the Ad show page
         this.mvc.perform(
@@ -168,6 +144,26 @@ public class PostIntegrationTests {
                 // Test the dynamic content of the page
                 .andExpect(content().string(containsString("edited title")))
                 .andExpect(content().string(containsString("edited description")));
+    }
+    @Test
+    public void testDeletePost() throws Exception {
+        // Creates a test Post to be deleted
+        this.mvc.perform(
+                        post("/posts/create").with(csrf())
+                                .session((MockHttpSession) httpSession)
+                                .param("title", "post to be deleted")
+                                .param("description", "won't last long"))
+                .andExpect(status().is3xxRedirection());
+
+        // Get the recent Ad that matches the title
+        Post existingAd = postsDao.findByTitle("ad to be deleted");
+
+        // Makes a Post request to /ads/{id}/delete and expect a redirection to the Ads index
+        this.mvc.perform(
+                        post("/posts/" + existingAd.getId() + "/delete").with(csrf())
+                                .session((MockHttpSession) httpSession)
+                                .param("id", String.valueOf(existingAd.getId())))
+                .andExpect(status().is3xxRedirection());
     }
 
 
